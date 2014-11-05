@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Hoje Tem!</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Hoje Tem B|</string>
     <string name="action_settings">Settings</string>
 
 </resources>
