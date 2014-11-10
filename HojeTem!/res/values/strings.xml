@@ -4,5 +4,10 @@
     <string name="app_name">Hoje Tem!</string>
     <string name="hello_world">Hoje Tem B|</string>
     <string name="action_settings">Settings</string>
+    <string name="action_legalNotices">Legal Notices</string>
+    <string name="title_activity_main">Hoje Tem!</string>
+    <string name="title_activity_legal">LegalActivity</string>
+    <string name="action_search">Buscar</string>
+    <string name="logout">Sair</string>
 
 </resources>
