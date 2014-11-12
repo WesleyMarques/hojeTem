@@ -1,4 +1,4 @@
-package com.example.hojetem;
+package com.hojetem.login;
 
 import java.util.Arrays;
 
@@ -14,6 +14,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
+import com.hojetem.R;
 
 public class LoginFragment extends Fragment {
 
@@ -34,7 +35,7 @@ public class LoginFragment extends Fragment {
       View view = inflater.inflate(R.layout.activity_main, container, false);
       LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
       authButton.setFragment(this);
-      // Depois adicionamos mais permissões
+      // Depois adicionamos mais permissï¿½es
       authButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
 
       return view;
@@ -61,6 +62,7 @@ public class LoginFragment extends Fragment {
       // For scenarios where the main activity is launched and user
       // session is not null, the session state change notification
       // may not be triggered. Trigger it if it's open/closed.
+      super.onResume();
       Session session = Session.getActiveSession();
       if (session != null &&
             (session.isOpened() || session.isClosed())) {
