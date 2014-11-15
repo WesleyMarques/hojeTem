@@ -9,12 +9,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 
 public class MainActivity extends FragmentActivity {
 
-   private GoogleMap googleMap;
    private Intent legalActivity;
 
    @Override
@@ -23,7 +20,6 @@ public class MainActivity extends FragmentActivity {
 
       if (isGooglePlayAvailable()) {
          setContentView(R.layout.activity_main);
-         setupMap();
       }
    }
 
@@ -61,13 +57,6 @@ public class MainActivity extends FragmentActivity {
       }
 
       return available;
-   }
-
-   private void setupMap() {
-      if (googleMap == null) {
-         googleMap = ((MapFragment) getFragmentManager().findFragmentById(
-               R.id.map)).getMap();
-      }
    }
 
 }
