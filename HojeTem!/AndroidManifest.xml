@@ -3,13 +3,14 @@
     package="br.com.ufcg.hojeTem"
     android:versionCode="1"
     android:versionName="1.0" >
-
+    
     <!-- DEV Add user permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.LOCATION_HARDWARE"/>    
 
     <!-- DEV OpenGL enable to Google Maps view resource -->
     <uses-feature
@@ -25,6 +26,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
+		<!-- DEV Add maps lib -->
+		<uses-library android:name="com.google.android.maps"/>
 
         <!-- DEV: Acess to Google Maps API -->
         <meta-data
@@ -35,17 +39,12 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:name=".MapActivity"
+            android:label="@string/title_activity_map" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".LegalActivity"
-            android:label="@string/title_activity_legal" >
         </activity>
     </application>
 
