@@ -5,6 +5,9 @@
     <string name="action_settings">Settings</string>
     <string name="action_search">Buscar</string>
     <string name="logout">Sair</string>
-    <string name="title_activity_map">Hoje Tem!</string>
+    <string name="title_activity_map">Eventos</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="app_id">1500633920220188</string>
+    <string name="title_activity_login">Hoje Tem!</string>
 
 </resources>
