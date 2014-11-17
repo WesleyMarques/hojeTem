@@ -10,10 +10,10 @@ O objetivo deste software (aplicativo) é de prover uma nova maneira para que as
 
 Grupo de desenvolvedores:
 - Júlio Leitão de Melo Júnior
- TODO
--
--
--
--
--
+- Erick de Azevedo Alcântara 
+- Fellype Cavalcante de Albuquerque
+- Isabelly Santos Cavalcante
+- Gustavo Nobuhiro Santos Yamaguchi
+- Wesley Nunes Marques Torres
+
 
