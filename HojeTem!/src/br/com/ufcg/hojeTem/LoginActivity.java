@@ -18,6 +18,7 @@ public class LoginActivity extends FragmentActivity {
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
       if (savedInstanceState == null) {
          // Add the fragment on initial activity setup
          mainFragment = new MainFragment();

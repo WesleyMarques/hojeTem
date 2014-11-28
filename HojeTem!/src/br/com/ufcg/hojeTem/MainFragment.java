@@ -19,6 +19,7 @@ public class MainFragment extends Fragment {
 
    private static final String TAG = "MainFragment";
    private UiLifecycleHelper uiHelper;
+   private FacebookFacade facebookFacade;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -44,13 +45,16 @@ public class MainFragment extends Fragment {
       @Override
       public void call(Session session, SessionState state, Exception exception) {
          onSessionStateChange(session, state, exception);
+
       }
    };
 
    private void onSessionStateChange(Session session, SessionState state,
          Exception exception) {
       if (state.isOpened()) {
-         Log.i(TAG, "Logged in...");
+         facebookFacade = new FacebookFacade(session);
+         Log.i(TAG, "Logged in..." + (facebookFacade == null));
+         facebookFacade.getAllEvents();
       } else if (state.isClosed()) {
          Log.i(TAG, "Logged out...");
       }
@@ -73,6 +77,7 @@ public class MainFragment extends Fragment {
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
+
       uiHelper.onActivityResult(requestCode, resultCode, data);
    }
 
