@@ -34,7 +34,7 @@
         <!-- DEV: Acess to Google Maps API -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBVe86NGABOIb3WKhlEBBKnnymZBR5qgi8" />
+            android:value="AIzaSyCck6p_GU19HdGQoqVBSCIQD2r-LlryX00" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

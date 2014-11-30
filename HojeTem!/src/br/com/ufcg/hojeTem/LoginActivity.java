@@ -6,11 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-/**
- * 
- * @author Júlio
- * 
- */
 public class LoginActivity extends FragmentActivity {
 
    private MainFragment mainFragment;

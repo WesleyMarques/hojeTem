@@ -36,7 +36,8 @@ public class MainFragment extends Fragment {
       LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
       authButton.setFragment(this);
       // Depois adicionamos mais permiss�es
-      authButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
+      authButton.setReadPermissions(Arrays.asList("user_likes", "user_status",
+            "user_events"));
 
       return view;
    }

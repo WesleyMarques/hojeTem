@@ -17,7 +17,7 @@ public class FacebookFacade {
 
    public void getAllEvents() {
       facebookQuery
-            .getRequest("/search?q=*&type=event&limit=1");
+            .getRequest("https://graph.facebook.com/search?type=location&center=37.76,-122.427&distance=1000");
       // search?q=campina grande&type=event&fields=id&limit=5
    }
 
@@ -26,10 +26,10 @@ public class FacebookFacade {
       @Override
       public void handler(Response response) {
          // TODO Joga para o googleMaps o resultado como Map
+         Log.i("TOKEN", session.getAccessToken());
          Log.i("Facebook response", "####" + response.getRawResponse());
          Log.i("Facebook response", "####"
                + response.getError().getErrorMessage());
-
       }
 
    };
