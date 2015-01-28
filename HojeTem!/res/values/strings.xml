@@ -24,5 +24,8 @@
         <item>@drawable/ic_action_directions</item>
         <item>@drawable/ic_action_place</item>
     </array>
+    
+     <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
 
 </resources>
