@@ -1,16 +1,13 @@
 package br.com.ufcg.hojeTem;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import br.com.ufcg.hojeTem.service.EventFacade;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -18,7 +15,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Projeto: Hoje Tem!
@@ -35,6 +31,7 @@ public class MapActivity extends FragmentActivity {
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
       if (isGooglePlayAvailable()) {
          setContentView(R.layout.activity_map);
          setAtualLocation();
@@ -116,38 +113,8 @@ public class MapActivity extends FragmentActivity {
       eventsMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
       eventsMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-      for (Event event : getEvents()) {
-         Log.i("HOJETem", event.toString());
-         eventsMap.addMarker(eventToMark(event));
-      }
-
-      Log.i("HOJETem", latitude + " " + longitude);
+      EventFacade.getInstance().markEventsByCity("campina grande",
+            this.eventsMap);
    }
 
-   public MarkerOptions eventToMark(Event event) {
-      return new MarkerOptions().position(
-            new LatLng(event.getLatitude(), event.getLongitude())).title(
-            event.getName());
-   }
-
-   public List<Event> getEvents() {
-      List<Event> eventosDefault = new ArrayList<Event>();
-      eventosDefault.add(new Event(1l, "La Suissa", -7.2213647781047,
-            -35.884464535062));
-
-      eventosDefault.add(new Event(663452713697240l,
-            "Centro de Campina  Grande", -7.2209607361535, -35.886139637639));
-
-      eventosDefault.add(new Event(194881487223654l, "Mega Burguer",
-            -7.21890247904, -35.8844112298));
-      eventosDefault.add(new Event(133399323508231l, "Dental Líder",
-            -7.22176378956, -35.884591916));
-      eventosDefault.add(new Event(126193357458967l, "Comunidade Pio X",
-            -7.22156657706, -35.8849709618));
-
-      eventosDefault.add(new Event(499563313415436l, "Degust Restaurante",
-            -7.2204072118943, -35.884185004524));
-
-      return eventosDefault;
-   }
 }

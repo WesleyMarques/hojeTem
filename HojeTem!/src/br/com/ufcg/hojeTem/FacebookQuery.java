@@ -16,6 +16,7 @@ public class FacebookQuery {
 
    public FacebookQuery(final Handler handler, Session session) {
       this.session = session;
+
       callback = new Request.Callback() {
 
          @Override

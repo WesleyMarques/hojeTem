@@ -1,10 +1,11 @@
 package br.com.ufcg.hojeTem;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.facebook.Session;
 
 public class LoginActivity extends FragmentActivity {
 
@@ -40,10 +41,8 @@ public class LoginActivity extends FragmentActivity {
       // Handle action bar item clicks here. The action bar will
       // automatically handle clicks on the Home/Up button, so long
       // as you specify a parent activity in AndroidManifest.xml.
-      if (item.getItemId() == R.id.action_search) {
-         // TODO @author Júlio L. Remover isto, pois o mapa deve ser acessível
-         // ao logar (direcionar direto)
-         startActivity(new Intent(this, MapActivity.class));
+      if (item.getItemId() == R.id.action_logout) {
+         Session.getActiveSession().closeAndClearTokenInformation();
       }
       return super.onOptionsItemSelected(item);
    }

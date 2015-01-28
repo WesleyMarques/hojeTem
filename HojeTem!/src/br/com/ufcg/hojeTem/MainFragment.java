@@ -53,9 +53,9 @@ public class MainFragment extends Fragment {
    private void onSessionStateChange(Session session, SessionState state,
          Exception exception) {
       if (state.isOpened()) {
-         facebookFacade = new FacebookFacade(session);
-         Log.i(TAG, "Logged in..." + (facebookFacade == null));
-         facebookFacade.getAllEvents();
+         Intent intent = new Intent(this.getView().getContext(),
+               MapActivity.class);
+         startActivityForResult(intent, 0);
       } else if (state.isClosed()) {
          Log.i(TAG, "Logged out...");
       }

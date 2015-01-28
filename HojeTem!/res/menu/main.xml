@@ -4,10 +4,6 @@
     tools:context="br.com.ufcg.hojeTem.MapActivity" >
 
     <item
-        android:id="@+id/action_search"
-        android:icon="@drawable/ic_action_search"
-        android:title="@string/action_search"/>
-    <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
         android:title="@string/logout"/>
