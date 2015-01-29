@@ -36,10 +36,20 @@ public class EventFacade implements IEventFacade {
    @Override
    public void markEventsByCity(String city, GoogleMap map) {
       this.map = map;
-      new HttpAsyncTask().execute(UriService.getURI(city));
+      new HttpAsyncEventTask().execute(UriService.getURI(city));
    }
 
-   private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+   @Override
+   public void markEventCurrentLocation(GoogleMap map, double latitude,
+         double longitude) {
+      this.map = map;
+
+      new HttpAsyncTask()
+            .execute("http://maps.googleapis.com/maps/api/geocode/json?latlng="
+                  + latitude + "," + longitude + "&sensor=true");
+   }
+
+   private class HttpAsyncEventTask extends AsyncTask<String, Void, String> {
       @Override
       protected String doInBackground(String... urls) {
          return GET(urls[0]);
@@ -54,6 +64,37 @@ public class EventFacade implements IEventFacade {
                map.addMarker(eventToMark(event));
             }
 
+         } catch (JSONException e) {
+            e.printStackTrace();
+         }
+      }
+   }
+
+   private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+      @Override
+      protected String doInBackground(String... urls) {
+         return GET(urls[0]);
+      }
+
+      protected void onPostExecute(String result) {
+         try {
+            JSONObject json = new JSONObject(result);
+            JSONArray results = json.getJSONArray("results");
+            JSONArray address = results.getJSONObject(0).getJSONArray(
+                  "address_components");
+
+            for (int i = 0; i < address.length(); i++) {
+               JSONArray mTypes = address.getJSONObject(i)
+                     .getJSONArray("types");
+               String type = mTypes.getString(0);
+               if (type.equalsIgnoreCase("locality")) {
+                  String cidade = address.getJSONObject(i).getString(
+                        "long_name");
+                  new HttpAsyncEventTask().execute(UriService.getURI(cidade));
+                  break;
+               }
+
+            }
          } catch (JSONException e) {
             e.printStackTrace();
          }

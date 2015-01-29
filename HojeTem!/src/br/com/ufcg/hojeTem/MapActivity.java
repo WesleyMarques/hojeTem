@@ -155,6 +155,10 @@ public class MapActivity extends FragmentActivity {
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
+      if (mDrawerToggle.onOptionsItemSelected(item)) {
+         return true;
+      }
+
       if (item.getItemId() == R.id.action_logout) {
          this.finish();
       }
@@ -193,8 +197,12 @@ public class MapActivity extends FragmentActivity {
       eventsMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
       eventsMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-      EventFacade.getInstance().markEventsByCity("campina grande",
-            this.eventsMap);
+      EventFacade.getInstance().markEventCurrentLocation(this.eventsMap,
+            latitude, longitude);
+
+      // EventFacade.getInstance().markEventsByCity("campina grande",
+      // this.eventsMap);
+
    }
 
    // ====================================================

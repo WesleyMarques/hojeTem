@@ -13,4 +13,7 @@ public interface IEventFacade {
 
    public void markEventsByCity(String city, GoogleMap map);
 
+   public void markEventCurrentLocation(GoogleMap map, double latitude,
+         double longitude);
+
 }
