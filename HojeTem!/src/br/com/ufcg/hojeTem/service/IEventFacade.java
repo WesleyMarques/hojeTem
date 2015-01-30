@@ -16,4 +16,6 @@ public interface IEventFacade {
    public void markEventCurrentLocation(GoogleMap map, double latitude,
          double longitude);
 
+   public void getEvent(Long id);
+
 }

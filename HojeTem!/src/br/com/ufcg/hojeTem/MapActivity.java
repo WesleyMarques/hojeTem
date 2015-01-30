@@ -3,7 +3,7 @@ package br.com.ufcg.hojeTem;
 import java.util.ArrayList;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.location.Location;
@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +22,7 @@ import br.com.ufcg.hojeTem.service.EventFacade;
 import br.com.ufcg.hojeTem.slideMenu.NavDrawerItem;
 import br.com.ufcg.hojeTem.slideMenu.NavDrawerListAdapter;
 
+import com.facebook.Session;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,6 +39,10 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class MapActivity extends FragmentActivity {
 
+   private static final int HOME = 0;
+   private static final int PESQUISAR = 1;
+   private static final int FILTRAR = 2;
+   private static final int VISUALIZAR = 3;
    /** Nosso mapa do Google Maps */
    private GoogleMap eventsMap;
 
@@ -68,19 +72,21 @@ public class MapActivity extends FragmentActivity {
       // adding nav drawer items to array
       // Home
       navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons
-            .getResourceId(0, -1)));
+            .getResourceId(HOME, -1)));
       // Find People
       navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons
-            .getResourceId(1, -1)));
+            .getResourceId(PESQUISAR, -1)));
       // Photos
       navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons
-            .getResourceId(2, -1)));
+            .getResourceId(FILTRAR, -1)));
       // Communities, Will add a counter here
       navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons
-            .getResourceId(3, -1), true, "22"));
+            .getResourceId(VISUALIZAR, -1)));
 
       // Recycle the typed array
       navMenuIcons.recycle();
+
+      mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
       // setting the nav drawer list adapter
       adapter = new NavDrawerListAdapter(getApplicationContext(),
@@ -160,7 +166,9 @@ public class MapActivity extends FragmentActivity {
       }
 
       if (item.getItemId() == R.id.action_logout) {
+         Session.getActiveSession().closeAndClearTokenInformation();
          this.finish();
+         System.exit(0);
       }
       return super.onOptionsItemSelected(item);
    }
@@ -199,13 +207,8 @@ public class MapActivity extends FragmentActivity {
 
       EventFacade.getInstance().markEventCurrentLocation(this.eventsMap,
             latitude, longitude);
-
-      // EventFacade.getInstance().markEventsByCity("campina grande",
-      // this.eventsMap);
-
    }
 
-   // ====================================================
    private DrawerLayout mDrawerLayout;
    private ListView mDrawerList;
    private ActionBarDrawerToggle mDrawerToggle;
@@ -279,30 +282,34 @@ public class MapActivity extends FragmentActivity {
       // update the main content by replacing fragments
       Fragment fragment = null;
       switch (position) {
-         case 0:
-            fragment = new HomeFragment();
+         case HOME:
+            // update selected item and title, then close the drawer
+            mDrawerList.setItemChecked(position, true);
+            mDrawerList.setSelection(position);
+            setTitle(navMenuTitles[position]);
+            mDrawerLayout.closeDrawer(mDrawerList);
             break;
+         case PESQUISAR:
+            mDrawerList.setItemChecked(position, true);
+            mDrawerList.setSelection(position);
+            setTitle(navMenuTitles[position]);
+            mDrawerLayout.closeDrawer(mDrawerList);
+            break;
+         case VISUALIZAR:
+            mDrawerList.setItemChecked(position, true);
+            mDrawerList.setSelection(position);
+            setTitle(navMenuTitles[position]);
+            mDrawerLayout.closeDrawer(mDrawerList);
 
+            Intent intent = new Intent(getApplicationContext(),
+                  ListViewActivity.class);
+            startActivity(intent);
+
+            break;
          default:
             break;
       }
       // TODO
-      fragment = new HomeFragment();
 
-      if (fragment != null) {
-         FragmentManager fragmentManager = getFragmentManager();
-         fragmentManager.beginTransaction()
-               .replace(R.id.frame_container, fragment).commit();
-
-         // update selected item and title, then close the drawer
-         mDrawerList.setItemChecked(position, true);
-         mDrawerList.setSelection(position);
-         setTitle(navMenuTitles[position]);
-         mDrawerLayout.closeDrawer(mDrawerList);
-      } else {
-         // error in creating fragment
-         Log.e("MainActivity", "Error in creating fragment");
-      }
    }
-
 }

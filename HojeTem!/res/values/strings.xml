@@ -24,8 +24,17 @@
         <item>@drawable/ic_action_directions</item>
         <item>@drawable/ic_action_place</item>
     </array>
-    
-     <!-- Content Description -->
+
+    <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
+    <string name="title_activity_nav">NavActivity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="title_activity_event_view">EventViewActivity</string>
 
 </resources>

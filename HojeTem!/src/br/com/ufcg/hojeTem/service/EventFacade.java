@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 import br.com.ufcg.hojeTem.model.Event;
+import br.com.ufcg.hojeTem.model.EventInfo;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,6 +27,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class EventFacade implements IEventFacade {
 
    private GoogleMap map;
+
+   private List<Event> eventos;
+   private EventInfo eventInfo;
 
    private static EventFacade instance;
 
@@ -37,6 +41,12 @@ public class EventFacade implements IEventFacade {
    public void markEventsByCity(String city, GoogleMap map) {
       this.map = map;
       new HttpAsyncEventTask().execute(UriService.getURI(city));
+   }
+
+   @Override
+   public void getEvent(Long id) {
+      // TODO Auto-generated method stub
+      new HttpAsyncEventInfoTask().execute(UriService.getURI(id));
    }
 
    @Override
@@ -67,6 +77,49 @@ public class EventFacade implements IEventFacade {
          } catch (JSONException e) {
             e.printStackTrace();
          }
+      }
+   }
+
+   private class HttpAsyncEventInfoTask extends AsyncTask<String, Void, String> {
+      @Override
+      protected String doInBackground(String... urls) {
+         return GET(urls[0]);
+      }
+
+      protected void onPostExecute(String result) {
+         try {
+            JSONObject json = new JSONObject(result);
+            EventInfo event = getEvent(json);
+
+         } catch (JSONException e) {
+            e.printStackTrace();
+         }
+      }
+
+      private EventInfo getEvent(JSONObject json) {
+
+         try {
+            Long id = json.getLong("id");
+            String name = json.getString("name");
+            JSONObject venue = json.getJSONObject("venue");
+            Double latitude = venue.getDouble("latitude");
+            Double longitude = venue.getDouble("longitude");
+            String location = venue.getString("location");
+
+            String description = json.getString("description");
+
+            String privacy = json.getString("privacy");
+
+            EventInfo event = new EventInfo(id, name, latitude, longitude,
+                  description, location, privacy);
+            setEventInfo(event);
+            return event;
+         } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+
+         return null;
       }
    }
 
@@ -161,6 +214,7 @@ public class EventFacade implements IEventFacade {
             events.add(event);
          }
       }
+      this.eventos = events;
       return events;
    }
 
@@ -175,6 +229,25 @@ public class EventFacade implements IEventFacade {
       return new MarkerOptions().position(
             new LatLng(event.getLatitude(), event.getLongitude())).title(
             event.getName());
+   }
+
+   public List<Event> getEventos() {
+      if (eventos == null) {
+         eventos = new ArrayList<Event>();
+      }
+      return eventos;
+   }
+
+   public void setEventos(List<Event> eventos) {
+      this.eventos = eventos;
+   }
+
+   public EventInfo getEventInfo() {
+      return this.eventInfo;
+   }
+
+   public void setEventInfo(EventInfo eventInfo) {
+      this.eventInfo = eventInfo;
    }
 
 }

@@ -19,7 +19,6 @@ public class MainFragment extends Fragment {
 
    private static final String TAG = "MainFragment";
    private UiLifecycleHelper uiHelper;
-   private FacebookFacade facebookFacade;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {

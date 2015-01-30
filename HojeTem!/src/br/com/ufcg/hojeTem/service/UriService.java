@@ -24,4 +24,15 @@ public class UriService {
             "&q=%s&type=event&fields=name,id,venue&limit=20", city));
       return uriRequest.toString();
    }
+
+   public static String getURI(Long id) {
+      StringBuilder uriRequest = new StringBuilder();
+      uriRequest.append("https://graph.facebook.com/v2.2/");
+      uriRequest.append(TOKEN);
+      uriRequest.append(Session.getActiveSession().getAccessToken());
+
+      uriRequest.append(String.format(
+            "&%d", id));
+      return uriRequest.toString();
+   }
 }
