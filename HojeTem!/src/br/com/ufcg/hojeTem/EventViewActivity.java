@@ -1,14 +1,10 @@
 package br.com.ufcg.hojeTem;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-import br.com.ufcg.hojeTem.model.Event;
 import br.com.ufcg.hojeTem.model.EventInfo;
 import br.com.ufcg.hojeTem.service.EventFacade;
 
@@ -21,39 +17,23 @@ public class EventViewActivity extends Activity {
 
       Intent i = getIntent();
       // getting attached intent data
-      String product = i.getStringExtra("product");
-
-      List<Event> eventos = EventFacade.getInstance().getEventos();
-
-      String[] values = new String[eventos.size()];
-      Long id = 0L;
-      for (Event evento : eventos) {
-         if (evento.getName().equals(product)) {
-            id = evento.getId();
-            EventFacade.getInstance().getEvent(id);
-            break;
-         }
-      }
-
-      while (EventFacade.getInstance().getEventInfo() == null) {
-         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-      }
-      findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
       TextView txtNomeEvento = (TextView) findViewById(R.id.nome_evento);
       TextView txtDescricao = (TextView) findViewById(R.id.descricao_evento);
       TextView txtPrivacidade = (TextView) findViewById(R.id.privacidade_evento);
       TextView txtLocation = (TextView) findViewById(R.id.location_evento);
-      TextView txtLatitude = (TextView) findViewById(R.id.latitude_evento);
-      TextView txtLongitude = (TextView) findViewById(R.id.longitude_evento);
+      TextView txtCoordenada = (TextView) findViewById(R.id.coordenadas);
 
       EventInfo eventInfo = EventFacade.getInstance().getEventInfo();
-      txtNomeEvento.setText(eventInfo.getName());
-      txtDescricao.setText(eventInfo.getDescription());
-      txtPrivacidade.setText(eventInfo.getPrivacy());
-      txtLocation.setText(eventInfo.getLocation());
-      txtLatitude.setText(String.valueOf(eventInfo.getLatitude()));
-      txtLongitude.setText(String.valueOf(eventInfo.getLongitude()));
 
+      txtNomeEvento.setText("Nome do evento: " + eventInfo.getName());
+      txtDescricao.setText("Descrição:" + eventInfo.getDescription());
+      txtPrivacidade.setText("Nível de privacidade: " + eventInfo.getPrivacy());
+      txtLocation.setText("Informação de localização: "
+            + eventInfo.getLocation());
+
+      String coordenadas = String.format("Latitude: %.2f Longitude: %.2f",
+            eventInfo.getLatitude(), eventInfo.getLongitude());
+      txtCoordenada.setText(coordenadas);
       // displaying selected product name
    }
 

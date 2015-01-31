@@ -1,77 +1,60 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="br.com.ufcg.hojeTem.EventViewActivity" >
+    android:layout_height="wrap_content" >
 
-    <RelativeLayout
-        android:id="@+id/loadingPanel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:context="br.com.ufcg.hojeTem.EventViewActivity" >
 
-        <ProgressBar
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/nome_evento"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:indeterminate="true" />
-    </RelativeLayout>
+            android:padding="10dip"
+            android:textColor="#000000"
+            android:textSize="20dip"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/nome_evento"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dip"
-        android:textColor="#ffffff"
-        android:textSize="25dip"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/descricao_evento"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:paddingTop="20dip"
+            android:textColor="#000000"
+            android:textSize="15dip"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/descricao_evento"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dip"
-        android:textColor="#ffffff"
-        android:textSize="15dip"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/privacidade_evento"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:textColor="#000000"
+            android:textSize="15dip"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/privacidade_evento"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dip"
-        android:textColor="#ffffff"
-        android:textSize="15dip"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/location_evento"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:textColor="#000000"
+            android:textSize="15dip"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/location_evento"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dip"
-        android:textColor="#ffffff"
-        android:textSize="15dip"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/coordenadas"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:textColor="#000000"
+            android:textSize="15dip"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/latitude_evento"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dip"
-        android:textColor="#ffffff"
-        android:textSize="15dip"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/longitude_evento"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dip"
-        android:textColor="#ffffff"
-        android:textSize="15dip"
-        android:textStyle="bold" />
-
-</RelativeLayout>
+</ScrollView>

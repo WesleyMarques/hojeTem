@@ -1,5 +1,7 @@
 package br.com.ufcg.hojeTem.service;
 
+import android.util.Log;
+
 import com.facebook.Session;
 
 /**
@@ -28,11 +30,12 @@ public class UriService {
    public static String getURI(Long id) {
       StringBuilder uriRequest = new StringBuilder();
       uriRequest.append("https://graph.facebook.com/v2.2/");
-      uriRequest.append(TOKEN);
-      uriRequest.append(Session.getActiveSession().getAccessToken());
 
       uriRequest.append(String.format(
-            "&%d", id));
+            "%d", id));
+      uriRequest.append("?" + TOKEN);
+      uriRequest.append(Session.getActiveSession().getAccessToken());
+      Log.e("URL", uriRequest.toString());
       return uriRequest.toString();
    }
 }

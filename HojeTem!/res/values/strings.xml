@@ -34,7 +34,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
-    <string name="title_activity_list">ListActivity</string>
-    <string name="title_activity_event_view">EventViewActivity</string>
+    <string name="title_activity_list">Eventos do Mapa</string>
+    <string name="title_activity_event_view">Informações do Evento</string>
 
 </resources>

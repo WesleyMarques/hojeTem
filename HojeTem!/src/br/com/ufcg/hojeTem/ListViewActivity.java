@@ -42,15 +42,30 @@ public class ListViewActivity extends ListActivity {
             // selected item
             String product = ((TextView) view).getText().toString();
 
+            List<Event> eventos = EventFacade.getInstance().getEventos();
+
+            for (Event evento : eventos) {
+               if (evento.getName().equals(product)) {
+                  EventFacade.getInstance().getEvent(evento.getId());
+                  try {
+                     new Thread().sleep(500);
+                  } catch (InterruptedException e) {
+                     // TODO Auto-generated catch block
+                     e.printStackTrace();
+                  }
+                  break;
+               }
+            }
+
             // Launching new Activity on selecting single List Item
             Intent i = new Intent(getApplicationContext(),
                   EventViewActivity.class);
             // sending data to new activity
             i.putExtra("product", product);
+
             startActivity(i);
 
          }
       });
    }
-
 }

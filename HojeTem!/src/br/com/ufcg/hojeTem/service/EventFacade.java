@@ -74,6 +74,8 @@ public class EventFacade implements IEventFacade {
                map.addMarker(eventToMark(event));
             }
 
+            getEvent(eventsRequest.get(0).getId());
+
          } catch (JSONException e) {
             e.printStackTrace();
          }
@@ -89,22 +91,26 @@ public class EventFacade implements IEventFacade {
       protected void onPostExecute(String result) {
          try {
             JSONObject json = new JSONObject(result);
-            EventInfo event = getEvent(json);
-
+            try {
+               Log.e("URL", "Iniciou");
+               getEvent(json);
+            } catch (Exception e) {
+               Log.e("URL", e.getMessage());
+            }
          } catch (JSONException e) {
             e.printStackTrace();
          }
       }
 
       private EventInfo getEvent(JSONObject json) {
-
+         Log.e("JSON", json.toString());
          try {
             Long id = json.getLong("id");
             String name = json.getString("name");
             JSONObject venue = json.getJSONObject("venue");
             Double latitude = venue.getDouble("latitude");
             Double longitude = venue.getDouble("longitude");
-            String location = venue.getString("location");
+            String location = json.getString("location");
 
             String description = json.getString("description");
 
@@ -115,8 +121,7 @@ public class EventFacade implements IEventFacade {
             setEventInfo(event);
             return event;
          } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.e("URL", e.getMessage());
          }
 
          return null;
