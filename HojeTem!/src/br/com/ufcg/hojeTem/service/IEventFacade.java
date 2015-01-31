@@ -11,11 +11,28 @@ import com.google.android.gms.maps.GoogleMap;
  */
 public interface IEventFacade {
 
+   /**
+    * 
+    * @param city
+    * @param map
+    */
    public void markEventsByCity(String city, GoogleMap map);
 
+   /**
+    * 
+    * @param map
+    * @param latitude
+    * @param longitude
+    */
    public void markEventCurrentLocation(GoogleMap map, double latitude,
          double longitude);
 
+   /**
+    * 
+    * @param id
+    */
    public void getEvent(Long id);
+
+   public void getUserEvents();
 
 }

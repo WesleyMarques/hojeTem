@@ -26,233 +26,230 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class EventFacade implements IEventFacade {
 
-   private GoogleMap map;
+    private GoogleMap map;
 
-   private List<Event> eventos;
-   private EventInfo eventInfo;
+    private List<Event> eventos;
+    private List<Event> eventosDoUsuario;
+    private EventInfo eventInfo;
 
-   private static EventFacade instance;
+    private static EventFacade instance;
 
-   // manter singleton
-   private EventFacade() {
-   }
+    // singleton pattern
+    private EventFacade() {
+    }
 
-   @Override
-   public void markEventsByCity(String city, GoogleMap map) {
-      this.map = map;
-      new HttpAsyncEventTask().execute(UriService.getURI(city));
-   }
+    @Override
+    public void markEventsByCity(String city, GoogleMap map) {
+	this.map = map;
+	String URI = UriService.getURI(city);
+	new HttpAsyncEventTask().execute(URI);
+    }
 
-   @Override
-   public void getEvent(Long id) {
-      // TODO Auto-generated method stub
-      new HttpAsyncEventInfoTask().execute(UriService.getURI(id));
-   }
+    @Override
+    public void getEvent(Long id) {
+	new HttpAsyncEventInfoTask().execute(UriService.getURI(id));
+    }
 
-   @Override
-   public void markEventCurrentLocation(GoogleMap map, double latitude,
-         double longitude) {
-      this.map = map;
+    @Override
+    public void markEventCurrentLocation(GoogleMap map, double latitude,
+	    double longitude) {
+	this.map = map;
+	String URI = UriService.getURI(latitude, longitude);
+	new HttpAsyncTask().execute(URI);
+    }
 
-      new HttpAsyncTask()
-            .execute("http://maps.googleapis.com/maps/api/geocode/json?latlng="
-                  + latitude + "," + longitude + "&sensor=true");
-   }
+    private class HttpAsyncEventTask extends AsyncTask<String, Void, String> {
+	@Override
+	protected String doInBackground(String... urls) {
+	    return GET(urls[0]);
+	}
 
-   private class HttpAsyncEventTask extends AsyncTask<String, Void, String> {
-      @Override
-      protected String doInBackground(String... urls) {
-         return GET(urls[0]);
-      }
+	protected void onPostExecute(String result) {
+	    try {
+		JSONObject json = new JSONObject(result);
+		List<Event> eventsRequest = getEvents(json);
+		for (Event event : eventsRequest) {
+		    map.addMarker(eventToMark(event));
+		}
 
-      protected void onPostExecute(String result) {
-         try {
-            JSONObject json = new JSONObject(result);
-            List<Event> eventsRequest = getEvents(json);
+	    } catch (JSONException e) {
+		e.printStackTrace();
+	    }
+	}
+    }
 
-            for (Event event : eventsRequest) {
-               map.addMarker(eventToMark(event));
-            }
+    private class HttpAsyncEventInfoTask extends
+	    AsyncTask<String, Void, String> {
+	@Override
+	protected String doInBackground(String... urls) {
+	    return GET(urls[0]);
+	}
 
-            getEvent(eventsRequest.get(0).getId());
+	protected void onPostExecute(String result) {
+	    try {
+		// TODO Solucionar
+		JSONObject json;
+		json = new JSONObject(result);
+		setEventInfo(getEvent(json));
+	    } catch (JSONException e) {
+		e.printStackTrace();
+	    }
+	}
 
-         } catch (JSONException e) {
-            e.printStackTrace();
-         }
-      }
-   }
+	private EventInfo getEvent(JSONObject json) {
+	    try {
+		Long id = json.getLong("id");
+		String name = json.getString("name");
+		JSONObject venue = json.getJSONObject("venue");
+		Double latitude = venue.getDouble("latitude");
+		Double longitude = venue.getDouble("longitude");
+		String location = json.getString("location");
 
-   private class HttpAsyncEventInfoTask extends AsyncTask<String, Void, String> {
-      @Override
-      protected String doInBackground(String... urls) {
-         return GET(urls[0]);
-      }
+		String description = json.getString("description");
 
-      protected void onPostExecute(String result) {
-         try {
-            JSONObject json = new JSONObject(result);
-            try {
-               Log.e("URL", "Iniciou");
-               getEvent(json);
-            } catch (Exception e) {
-               Log.e("URL", e.getMessage());
-            }
-         } catch (JSONException e) {
-            e.printStackTrace();
-         }
-      }
+		String privacy = json.getString("privacy");
 
-      private EventInfo getEvent(JSONObject json) {
-         Log.e("JSON", json.toString());
-         try {
-            Long id = json.getLong("id");
-            String name = json.getString("name");
-            JSONObject venue = json.getJSONObject("venue");
-            Double latitude = venue.getDouble("latitude");
-            Double longitude = venue.getDouble("longitude");
-            String location = json.getString("location");
+		EventInfo event = new EventInfo(id, name, latitude, longitude,
+			description, location, privacy);
+		return event;
+	    } catch (JSONException e) {
+		// TODO Solucionar
+	    }
+	    return null;
+	}
+    }
 
-            String description = json.getString("description");
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+	@Override
+	protected String doInBackground(String... urls) {
+	    return GET(urls[0]);
+	}
 
-            String privacy = json.getString("privacy");
+	protected void onPostExecute(String result) {
+	    try {
+		JSONObject json = new JSONObject(result);
+		JSONArray results = json.getJSONArray("results");
+		JSONArray address = results.getJSONObject(0).getJSONArray(
+			"address_components");
 
-            EventInfo event = new EventInfo(id, name, latitude, longitude,
-                  description, location, privacy);
-            setEventInfo(event);
-            return event;
-         } catch (JSONException e) {
-            Log.e("URL", e.getMessage());
-         }
+		for (int i = 0; i < address.length(); i++) {
+		    JSONArray mTypes = address.getJSONObject(i).getJSONArray(
+			    "types");
+		    String type = mTypes.getString(0);
+		    if (type.equalsIgnoreCase("locality")) {
+			String cidade = address.getJSONObject(i).getString(
+				"long_name");
+			new HttpAsyncEventTask().execute(UriService
+				.getURI(cidade));
+			break;
+		    }
 
-         return null;
-      }
-   }
+		}
+	    } catch (JSONException e) {
+		e.printStackTrace();
+	    }
+	}
+    }
 
-   private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-      @Override
-      protected String doInBackground(String... urls) {
-         return GET(urls[0]);
-      }
+    public static String GET(String url) {
+	InputStream inputStream = null;
+	String result = "";
+	try {
 
-      protected void onPostExecute(String result) {
-         try {
-            JSONObject json = new JSONObject(result);
-            JSONArray results = json.getJSONArray("results");
-            JSONArray address = results.getJSONObject(0).getJSONArray(
-                  "address_components");
+	    // create HttpClient
+	    HttpClient httpclient = new DefaultHttpClient();
 
-            for (int i = 0; i < address.length(); i++) {
-               JSONArray mTypes = address.getJSONObject(i)
-                     .getJSONArray("types");
-               String type = mTypes.getString(0);
-               if (type.equalsIgnoreCase("locality")) {
-                  String cidade = address.getJSONObject(i).getString(
-                        "long_name");
-                  new HttpAsyncEventTask().execute(UriService.getURI(cidade));
-                  break;
-               }
+	    // make GET request to the given URL
+	    HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
 
-            }
-         } catch (JSONException e) {
-            e.printStackTrace();
-         }
-      }
-   }
+	    // receive response as inputStream
+	    inputStream = httpResponse.getEntity().getContent();
 
-   public static String GET(String url) {
-      InputStream inputStream = null;
-      String result = "";
-      try {
+	    // convert inputstream to string
+	    if (inputStream != null)
+		result = convertInputStreamToString(inputStream);
+	    else
+		result = "Did not work!";
 
-         // create HttpClient
-         HttpClient httpclient = new DefaultHttpClient();
+	} catch (Exception e) {
+	    Log.d("InputStream", e.getLocalizedMessage());
+	}
+	return result;
+    }
 
-         // make GET request to the given URL
-         HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+    private static String convertInputStreamToString(InputStream inputStream)
+	    throws IOException {
+	BufferedReader bufferedReader = new BufferedReader(
+		new InputStreamReader(inputStream));
+	String line = "";
+	String result = "";
+	while ((line = bufferedReader.readLine()) != null)
+	    result += line;
 
-         // receive response as inputStream
-         inputStream = httpResponse.getEntity().getContent();
+	inputStream.close();
+	return result;
+    }
 
-         // convert inputstream to string
-         if (inputStream != null)
-            result = convertInputStreamToString(inputStream);
-         else
-            result = "Did not work!";
+    private List<Event> getEvents(JSONObject json) throws JSONException {
+	JSONArray array = json.getJSONArray("data");
 
-      } catch (Exception e) {
-         Log.d("InputStream", e.getLocalizedMessage());
-      }
-      return result;
-   }
+	List<Event> events = new ArrayList<Event>();
 
-   private static String convertInputStreamToString(InputStream inputStream)
-         throws IOException {
-      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-            inputStream));
-      String line = "";
-      String result = "";
-      while ((line = bufferedReader.readLine()) != null)
-         result += line;
+	for (int i = 0; i < array.length(); i++) {
+	    JSONObject object = array.getJSONObject(i);
+	    if (object.has("venue")
+		    && object.getJSONObject("venue").has("latitude")) {
+		Double latitude = ((JSONObject) object.get("venue"))
+			.getDouble(("latitude"));
 
-      inputStream.close();
-      return result;
-   }
+		Double longitude = ((JSONObject) object.get("venue"))
+			.getDouble(("longitude"));
 
-   private List<Event> getEvents(JSONObject json) throws JSONException {
-      JSONArray array = json.getJSONArray("data");
+		Event event = new Event(object.getLong("id"),
+			object.getString("name"), latitude, longitude);
+		events.add(event);
+	    }
+	}
+	this.eventos = events;
+	return events;
+    }
 
-      List<Event> events = new ArrayList<Event>();
+    public static EventFacade getInstance() {
+	if (instance == null) {
+	    instance = new EventFacade();
+	}
+	return instance;
+    }
 
-      for (int i = 0; i < array.length(); i++) {
-         JSONObject object = array.getJSONObject(i);
-         if (object.has("venue")
-               && object.getJSONObject("venue").has("latitude")) {
-            Double latitude = ((JSONObject) object.get("venue"))
-                  .getDouble(("latitude"));
+    public MarkerOptions eventToMark(Event event) {
+	return new MarkerOptions().position(
+		new LatLng(event.getLatitude(), event.getLongitude())).title(
+		event.getName());
+    }
 
-            Double longitude = ((JSONObject) object.get("venue"))
-                  .getDouble(("longitude"));
+    public List<Event> getEventos() {
+	if (eventos == null) {
+	    eventos = new ArrayList<Event>();
+	}
+	return eventos;
+    }
 
-            Event event = new Event(object.getLong("id"),
-                  object.getString("name"),
-                  latitude, longitude);
-            events.add(event);
-         }
-      }
-      this.eventos = events;
-      return events;
-   }
+    public void setEventos(List<Event> eventos) {
+	this.eventos = eventos;
+    }
 
-   public static EventFacade getInstance() {
-      if (instance == null) {
-         instance = new EventFacade();
-      }
-      return instance;
-   }
+    public EventInfo getEventInfo() {
+	return this.eventInfo;
+    }
 
-   public MarkerOptions eventToMark(Event event) {
-      return new MarkerOptions().position(
-            new LatLng(event.getLatitude(), event.getLongitude())).title(
-            event.getName());
-   }
+    public void setEventInfo(EventInfo eventInfo) {
+	this.eventInfo = eventInfo;
+    }
 
-   public List<Event> getEventos() {
-      if (eventos == null) {
-         eventos = new ArrayList<Event>();
-      }
-      return eventos;
-   }
+    @Override
+    public void getUserEvents() {
+	// TODO Auto-generated method stub
 
-   public void setEventos(List<Event> eventos) {
-      this.eventos = eventos;
-   }
-
-   public EventInfo getEventInfo() {
-      return this.eventInfo;
-   }
-
-   public void setEventInfo(EventInfo eventInfo) {
-      this.eventInfo = eventInfo;
-   }
+    }
 
 }

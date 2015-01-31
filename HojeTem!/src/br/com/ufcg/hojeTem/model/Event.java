@@ -10,6 +10,17 @@ public class Event {
    private double latitude;
    private double longitude;
 
+   /**
+    * 
+    * @param id
+    *           identificador do evento
+    * @param name
+    *           nome do evento
+    * @param latitude
+    *           latitude do evento
+    * @param longitude
+    *           longitude do evento
+    */
    public Event(long id, String name, double latitude, double longitude) {
       this.id = id;
       this.name = name;
