@@ -277,11 +277,13 @@ public class MapActivity extends FragmentActivity {
 	case MY_EVENTS:
 	    EventFacade.getInstance().getUserEvents();
 
-	    try {
-		new Thread().sleep(2000);
-	    } catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+	    if (EventFacade.getInstance().getEventosDoUsuario().isEmpty()) {
+		try {
+		    new Thread().sleep(2500);
+		} catch (InterruptedException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
 	    }
 
 	    // update selected item and title, then close the drawer
@@ -299,6 +301,7 @@ public class MapActivity extends FragmentActivity {
 	    mDrawerList.setSelection(position);
 	    setTitle(navMenuTitles[position]);
 	    mDrawerLayout.closeDrawer(mDrawerList);
+
 	    break;
 	case VISUALIZAR:
 	    mDrawerList.setItemChecked(position, true);

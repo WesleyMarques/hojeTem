@@ -236,9 +236,12 @@ public class EventFacade implements IEventFacade {
     }
 
     public MarkerOptions eventToMark(Event event) {
-	return new MarkerOptions().position(
-		new LatLng(event.getLatitude(), event.getLongitude())).title(
-		event.getName());
+	return new MarkerOptions()
+		.position(new LatLng(event.getLatitude(), event.getLongitude()))
+		.title(event.getName())
+		.snippet(
+			String.format("Latitude %.2f Longitude %.2f",
+				event.getLatitude(), event.getLongitude()));
     }
 
     public List<Event> getEventos() {
