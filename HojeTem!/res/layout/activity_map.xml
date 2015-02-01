@@ -5,6 +5,7 @@
     android:layout_height="match_parent" >
 
     <!-- Framelayout to display Fragments -->
+
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
@@ -15,6 +16,28 @@
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
+        <RelativeLayout
+            android:id="@+id/find_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_find"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="Mudar!" />
+
+            <EditText
+                android:id="@+id/et_location"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/btn_find"
+                android:hint="Nome da cidade"
+                android:inputType="text" />
+        </RelativeLayout>
+
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -23,15 +46,16 @@
     </LinearLayout>
 
     <!-- Listview to display slider menu -->
+
     <ListView
         android:id="@+id/list_slidermenu"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/list_background"
         android:choiceMode="singleChoice"
         android:divider="@color/list_divider"
-        android:dividerHeight="1dp"       
-        android:listSelector="@drawable/list_selector"
-        android:background="@color/list_background"/>
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_selector" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import br.com.ufcg.hojeTem.service.EventFacade;
 import br.com.ufcg.hojeTem.slideMenu.NavDrawerItem;
@@ -44,6 +45,8 @@ public class MapActivity extends FragmentActivity {
     /** Nosso mapa do Google Maps */
     private GoogleMap eventsMap;
 
+    private RelativeLayout layoutFind;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
@@ -52,6 +55,9 @@ public class MapActivity extends FragmentActivity {
 	    setContentView(R.layout.activity_map);
 	    setAtualLocation();
 	}
+
+	layoutFind = (RelativeLayout) findViewById(R.id.find_layout);
+	layoutFind.setVisibility(View.GONE);
 
 	mTitle = mDrawerTitle = getTitle();
 
@@ -301,6 +307,8 @@ public class MapActivity extends FragmentActivity {
 	    mDrawerList.setSelection(position);
 	    setTitle(navMenuTitles[position]);
 	    mDrawerLayout.closeDrawer(mDrawerList);
+
+	    layoutFind.setVisibility(View.VISIBLE);
 
 	    break;
 	case VISUALIZAR:
