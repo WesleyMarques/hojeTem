@@ -14,13 +14,13 @@ import android.widget.TextView;
 import br.com.ufcg.hojeTem.model.Event;
 import br.com.ufcg.hojeTem.service.EventFacade;
 
-public class ListViewActivity extends ListActivity {
+public class ListViewMyEventsActivity extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
-	List<Event> eventos = EventFacade.getInstance().getEventos();
+	List<Event> eventos = EventFacade.getInstance().getEventosDoUsuario();
 
 	String[] values = new String[eventos.size()];
 	int i = 0;
@@ -40,16 +40,16 @@ public class ListViewActivity extends ListActivity {
 
 		// selected item
 		String product = ((TextView) view).getText().toString();
-
-		List<Event> eventos = EventFacade.getInstance().getEventos();
+		List<Event> eventos = EventFacade.getInstance()
+			.getEventosDoUsuario();
 
 		for (Event evento : eventos) {
 		    if (evento.getName().equals(product)) {
 			EventFacade.getInstance().getEvent(evento.getId());
 			try {
-			    new Thread().sleep(500);
+			    new Thread().sleep(1000);
 			} catch (InterruptedException e) {
-			    // TODO Auto-generated catch block
+			    // TODO
 			    e.printStackTrace();
 			}
 			break;
@@ -67,4 +67,5 @@ public class ListViewActivity extends ListActivity {
 	    }
 	});
     }
+
 }

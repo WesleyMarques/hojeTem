@@ -68,6 +68,7 @@ public class EventFacade implements IEventFacade {
 	    try {
 		JSONObject json = new JSONObject(result);
 		List<Event> eventsRequest = getEvents(json);
+		setEventos(eventsRequest);
 		for (Event event : eventsRequest) {
 		    map.addMarker(eventToMark(event));
 		}
@@ -210,7 +211,20 @@ public class EventFacade implements IEventFacade {
 		events.add(event);
 	    }
 	}
-	this.eventos = events;
+	return events;
+    }
+
+    private List<Event> getEventsDoUsuario(JSONObject json)
+	    throws JSONException {
+	JSONArray array = json.getJSONArray("data");
+	List<Event> events = new ArrayList<Event>();
+
+	for (int i = 0; i < array.length(); i++) {
+	    JSONObject object = array.getJSONObject(i);
+	    Event event = new Event(object.getLong("id"),
+		    object.getString("name"), 0, 0);
+	    events.add(event);
+	}
 	return events;
     }
 
@@ -248,8 +262,56 @@ public class EventFacade implements IEventFacade {
 
     @Override
     public void getUserEvents() {
-	// TODO Auto-generated method stub
+	String URI = UriService.getUserURI();
+	new HttpAsyncTaskGetUser().execute(URI);
+    }
 
+    public List<Event> getEventosDoUsuario() {
+	if (eventosDoUsuario == null) {
+	    eventosDoUsuario = new ArrayList<Event>();
+	}
+	return eventosDoUsuario;
+    }
+
+    public void setEventosDoUsuario(List<Event> eventosDoUsuario) {
+	this.eventosDoUsuario = eventosDoUsuario;
+    }
+
+    private class HttpAsyncTaskGetUser extends AsyncTask<String, Void, String> {
+	@Override
+	protected String doInBackground(String... urls) {
+	    return GET(urls[0]);
+	}
+
+	protected void onPostExecute(String result) {
+	    try {
+		JSONObject json = new JSONObject(result);
+		Long userID = json.getLong("id");
+		String URI = UriService.getUserEventsURI(userID);
+		new HttpAsyncTaskGetUserEvents().execute(URI);
+	    } catch (JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	}
+    }
+
+    private class HttpAsyncTaskGetUserEvents extends
+	    AsyncTask<String, Void, String> {
+	@Override
+	protected String doInBackground(String... urls) {
+	    return GET(urls[0]);
+	}
+
+	protected void onPostExecute(String result) {
+	    try {
+		JSONObject json = new JSONObject(result);
+		List<Event> eventos = getEventsDoUsuario(json);
+		setEventosDoUsuario(eventos);
+	    } catch (JSONException e) {
+		e.printStackTrace();
+	    }
+	}
     }
 
 }

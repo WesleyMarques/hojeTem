@@ -13,6 +13,8 @@ public class LoginActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
+	this.getActionBar().hide();
+
 	if (savedInstanceState == null) {
 	    // Add the fragment on initial activity setup
 	    mainFragment = new MainFragment();

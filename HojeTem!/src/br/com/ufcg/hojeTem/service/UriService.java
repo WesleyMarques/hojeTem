@@ -77,6 +77,15 @@ public class UriService {
 	StringBuilder builder = new StringBuilder();
 	builder.append(FACEBOOK_API);
 	builder.append(userID + "/events/attending");
+	builder.append("?" + getTokenValue());
+	return builder.toString();
+    }
+
+    public static String getEventAttending(Long eventID) {
+	StringBuilder builder = new StringBuilder();
+	builder.append(FACEBOOK_API);
+	builder.append(eventID + "/attending");
+	builder.append("?" + getTokenValue());
 	return builder.toString();
     }
 

@@ -2,7 +2,6 @@ package br.com.ufcg.hojeTem;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -22,7 +21,6 @@ import br.com.ufcg.hojeTem.service.EventFacade;
 import br.com.ufcg.hojeTem.slideMenu.NavDrawerItem;
 import br.com.ufcg.hojeTem.slideMenu.NavDrawerListAdapter;
 
-import com.facebook.Session;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,7 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class MapActivity extends FragmentActivity {
 
-    private static final int HOME = 0;
+    private static final int MY_EVENTS = 0;
     private static final int PESQUISAR = 1;
     private static final int FILTRAR = 2;
     private static final int VISUALIZAR = 3;
@@ -72,7 +70,7 @@ public class MapActivity extends FragmentActivity {
 	// adding nav drawer items to array
 	// Home
 	navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons
-		.getResourceId(HOME, -1)));
+		.getResourceId(MY_EVENTS, -1)));
 	// Find People
 	navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons
 		.getResourceId(PESQUISAR, -1)));
@@ -120,7 +118,7 @@ public class MapActivity extends FragmentActivity {
 
 	if (savedInstanceState == null) {
 	    // on first time display view for first nav item
-	    displayView(0);
+	    // displayView(0);
 	}
     }
 
@@ -164,9 +162,7 @@ public class MapActivity extends FragmentActivity {
 	}
 
 	if (item.getItemId() == R.id.action_logout) {
-	    Session.getActiveSession().closeAndClearTokenInformation();
 	    this.finish();
-	    System.exit(0);
 	}
 	return super.onOptionsItemSelected(item);
     }
@@ -277,14 +273,26 @@ public class MapActivity extends FragmentActivity {
      * */
     private void displayView(int position) {
 	// update the main content by replacing fragments
-	Fragment fragment = null;
 	switch (position) {
-	case HOME:
+	case MY_EVENTS:
+	    EventFacade.getInstance().getUserEvents();
+
+	    try {
+		new Thread().sleep(2000);
+	    } catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+
 	    // update selected item and title, then close the drawer
 	    mDrawerList.setItemChecked(position, true);
 	    mDrawerList.setSelection(position);
 	    setTitle(navMenuTitles[position]);
 	    mDrawerLayout.closeDrawer(mDrawerList);
+
+	    Intent intentUserEvents = new Intent(getApplicationContext(),
+		    ListViewMyEventsActivity.class);
+	    startActivity(intentUserEvents);
 	    break;
 	case PESQUISAR:
 	    mDrawerList.setItemChecked(position, true);
@@ -306,7 +314,6 @@ public class MapActivity extends FragmentActivity {
 	default:
 	    break;
 	}
-	// TODO
-
     }
+
 }
