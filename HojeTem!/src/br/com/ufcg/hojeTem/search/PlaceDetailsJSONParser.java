@@ -34,7 +34,6 @@ public class PlaceDetailsJSONParser {
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
-
 	hm.put("lat", Double.toString(lat));
 	hm.put("lng", Double.toString(lng));
 	hm.put("formatted_address", formattedAddress);

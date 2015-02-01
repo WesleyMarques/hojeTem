@@ -157,7 +157,6 @@ public class EventFacade implements IEventFacade {
 	InputStream inputStream = null;
 	String result = "";
 	try {
-
 	    // create HttpClient
 	    HttpClient httpclient = new DefaultHttpClient();
 

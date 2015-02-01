@@ -227,7 +227,6 @@ public class MapActivity extends FragmentActivity implements
 	    provider = LocationManager.NETWORK_PROVIDER;
 	    location = locationManager.getLastKnownLocation(provider);
 	}
-
 	if (location != null) {
 	    onLocationChanged(location);
 	}
