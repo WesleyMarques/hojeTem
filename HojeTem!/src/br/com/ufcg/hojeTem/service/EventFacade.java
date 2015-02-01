@@ -28,8 +28,8 @@ public class EventFacade implements IEventFacade {
 
     private GoogleMap map;
 
-    private List<Event> eventos;
-    private List<Event> eventosDoUsuario;
+    private List<Event> eventos = new ArrayList<Event>();
+    private List<Event> eventosDoUsuario = new ArrayList<Event>();
     private EventInfo eventInfo;
 
     private static EventFacade instance;
@@ -68,7 +68,8 @@ public class EventFacade implements IEventFacade {
 	    try {
 		JSONObject json = new JSONObject(result);
 		List<Event> eventsRequest = getEvents(json);
-		setEventos(eventsRequest);
+
+		eventos.addAll(eventsRequest);
 		for (Event event : eventsRequest) {
 		    map.addMarker(eventToMark(event));
 		}

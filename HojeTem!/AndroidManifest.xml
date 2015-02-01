@@ -42,6 +42,20 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map" >
+            
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <!-- Points to searchable activity -->
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".MainActivity" />
+
+            <!-- Points to searchable meta data -->
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -73,6 +87,11 @@
             android:name=".ListViewMyEventsActivity"
             android:label="@string/title_activity_list_view_my_events" >
         </activity>
+
+        <provider
+            android:name="br.com.ufcg.hojeTem.search.PlaceProvider"
+            android:authorities="in.wptrafficanalyzer.locationsearchdialogv2.PlaceProvider"
+            android:exported="false" />
     </application>
 
 </manifest>

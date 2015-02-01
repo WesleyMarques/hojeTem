@@ -2,32 +2,39 @@ package br.com.ufcg.hojeTem;
 
 import java.util.ArrayList;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
+import br.com.ufcg.hojeTem.search.PlaceProvider;
 import br.com.ufcg.hojeTem.service.EventFacade;
 import br.com.ufcg.hojeTem.slideMenu.NavDrawerItem;
 import br.com.ufcg.hojeTem.slideMenu.NavDrawerListAdapter;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Projeto: Hoje Tem!
@@ -36,7 +43,8 @@ import com.google.android.gms.maps.model.LatLng;
  * eventos.
  * 
  */
-public class MapActivity extends FragmentActivity {
+public class MapActivity extends FragmentActivity implements
+	LoaderCallbacks<Cursor> {
 
     private static final int MY_EVENTS = 0;
     private static final int PESQUISAR = 1;
@@ -44,8 +52,6 @@ public class MapActivity extends FragmentActivity {
     private static final int VISUALIZAR = 3;
     /** Nosso mapa do Google Maps */
     private GoogleMap eventsMap;
-
-    private RelativeLayout layoutFind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +61,6 @@ public class MapActivity extends FragmentActivity {
 	    setContentView(R.layout.activity_map);
 	    setAtualLocation();
 	}
-
-	layoutFind = (RelativeLayout) findViewById(R.id.find_layout);
-	layoutFind.setVisibility(View.GONE);
 
 	mTitle = mDrawerTitle = getTitle();
 
@@ -125,6 +128,82 @@ public class MapActivity extends FragmentActivity {
 	if (savedInstanceState == null) {
 	    // on first time display view for first nav item
 	    // displayView(0);
+	}
+    }
+
+    private void handleIntent(Intent intent) {
+	if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
+	    doSearch(intent.getStringExtra(SearchManager.QUERY));
+	} else if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+	    getPlace(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+	}
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+	super.onNewIntent(intent);
+	setIntent(intent);
+	handleIntent(intent);
+    }
+
+    private void doSearch(String query) {
+	Bundle data = new Bundle();
+	data.putString("query", query);
+	getSupportLoaderManager().restartLoader(0, data, this);
+    }
+
+    private void getPlace(String query) {
+	Bundle data = new Bundle();
+	data.putString("query", query);
+	getSupportLoaderManager().restartLoader(1, data, this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
+	CursorLoader cLoader = null;
+	if (arg0 == 0)
+	    cLoader = new CursorLoader(getBaseContext(),
+		    PlaceProvider.SEARCH_URI, null, null,
+		    new String[] { query.getString("query") }, null);
+	else if (arg0 == 1)
+	    cLoader = new CursorLoader(getBaseContext(),
+		    PlaceProvider.DETAILS_URI, null, null,
+		    new String[] { query.getString("query") }, null);
+	return cLoader;
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> arg0, Cursor c) {
+	showLocations(c);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
+	// TODO Auto-generated method stub
+    }
+
+    private void showLocations(Cursor c) {
+	MarkerOptions markerOptions = null;
+	LatLng position = null;
+	// eventsMap.clear();
+	while (c.moveToNext()) {
+	    markerOptions = new MarkerOptions();
+	    position = new LatLng(Double.parseDouble(c.getString(1)),
+		    Double.parseDouble(c.getString(2)));
+	    EventFacade.getInstance().markEventCurrentLocation(eventsMap,
+		    position.latitude, position.longitude);
+
+	    markerOptions.position(position);
+	    markerOptions.title(c.getString(0));
+	    eventsMap.addMarker(markerOptions);
+	    break;
+	}
+	if (position != null) {
+	    CameraUpdate cameraPosition = CameraUpdateFactory
+		    .newLatLng(position);
+	    eventsMap.animateCamera(cameraPosition);
 	}
     }
 
@@ -287,7 +366,6 @@ public class MapActivity extends FragmentActivity {
 		try {
 		    new Thread().sleep(2500);
 		} catch (InterruptedException e) {
-		    // TODO Auto-generated catch block
 		    e.printStackTrace();
 		}
 	    }
@@ -308,7 +386,12 @@ public class MapActivity extends FragmentActivity {
 	    setTitle(navMenuTitles[position]);
 	    mDrawerLayout.closeDrawer(mDrawerList);
 
-	    layoutFind.setVisibility(View.VISIBLE);
+	    if (getIntent().getAction() == null) {
+		getIntent().setAction(Intent.ACTION_SEARCH);
+	    }
+
+	    handleIntent(getIntent());
+	    onSearchRequested();
 
 	    break;
 	case VISUALIZAR:
@@ -326,5 +409,4 @@ public class MapActivity extends FragmentActivity {
 	    break;
 	}
     }
-
 }

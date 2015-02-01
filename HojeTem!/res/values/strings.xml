@@ -37,5 +37,7 @@
     <string name="title_activity_list">Eventos do Mapa</string>
     <string name="title_activity_event_view">Informações do Evento</string>
     <string name="title_activity_list_view_my_events">Meus Eventos</string>
+    <string name="search_hint">Search Places</string>
+    <string name="search_settings">Search Places</string>
 
 </resources>
