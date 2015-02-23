@@ -9,6 +9,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="app_id">1500633920220188</string>
     <string name="title_activity_login">Hoje Tem!</string>
+    <string name="get_started">To get started, log in using Facebook</string>
 
     <!-- Constantes do Slide Menu -->
     <string-array name="nav_drawer_items">

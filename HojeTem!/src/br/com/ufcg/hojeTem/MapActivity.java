@@ -246,7 +246,9 @@ public class MapActivity extends FragmentActivity implements
 	}
 
 	if (item.getItemId() == R.id.action_logout) {
+	    setResult(5);
 	    this.finish();
+
 	}
 	return super.onOptionsItemSelected(item);
     }
